@@ -2,22 +2,22 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Hero from '../../components/Hero.astro';
 import { magBrands, rimSizes } from '../../lib/brands.js';
-import { formatPrice, getStockStatus } from '../../lib/directus.js';
+import { formatPrice, getStockStatus, getImageUrl } from '../../lib/directus.js';
 
 // Sample mags data (will be replaced with Directus data)
 const sampleMags = [
-  { id: '1', name: 'Grid', brand: 'Rota', size: '15x7', finish: 'Gunmetal', price: 12000, status: 'in_stock', is_featured: true },
-  { id: '2', name: 'D1 Spec', brand: 'Lenso', size: '16x7', finish: 'Black Chrome', price: 15000, status: 'in_stock', is_featured: true },
-  { id: '3', name: 'Emotion CR-KAI', brand: 'Work', size: '17x8', finish: 'Matte Black', price: 45000, status: 'limited', is_featured: true },
-  { id: '4', name: 'TE37', brand: 'Rays', size: '17x9', finish: 'Bronze', price: 65000, status: 'out_of_stock', is_featured: false },
-  { id: '5', name: 'RPF1', brand: 'Enkei', size: '16x7', finish: 'Silver', price: 28000, status: 'in_stock', is_featured: false },
-  { id: '6', name: 'Chromium', brand: 'XXR', size: '15x8', finish: 'Hyper Silver', price: 8500, status: 'in_stock', is_featured: false },
-  { id: '7', name: 'Hypergram', brand: 'Konig', size: '17x8', finish: 'Matte Bronze', price: 22000, status: 'in_stock', is_featured: false },
-  { id: '8', name: 'CV3', brand: 'Vossen', size: '18x8.5', finish: 'Gloss Black', price: 55000, status: 'limited', is_featured: false },
-  { id: '9', name: 'RS-GT', brand: 'BBS', size: '18x9', finish: 'Diamond Silver', price: 75000, status: 'out_of_stock', is_featured: false },
-  { id: '10', name: 'Ultraleggera', brand: 'OZ Racing', size: '17x7.5', finish: 'Race Gold', price: 38000, status: 'in_stock', is_featured: false },
-  { id: '11', name: 'Slipstream', brand: 'Rota', size: '16x7', finish: 'White', price: 11000, status: 'in_stock', is_featured: false },
-  { id: '12', name: 'Jager Daedalus', brand: 'Lenso', size: '17x7.5', finish: 'Hyper Black', price: 18000, status: 'in_stock', is_featured: false },
+  { id: '1', name: 'Grid', brand: 'Rota', size: '15x7', finish: 'Gunmetal', price: 12000, status: 'in_stock', is_featured: true, image: null },
+  { id: '2', name: 'D1 Spec', brand: 'Lenso', size: '16x7', finish: 'Black Chrome', price: 15000, status: 'in_stock', is_featured: true, image: null },
+  { id: '3', name: 'Emotion CR-KAI', brand: 'Work', size: '17x8', finish: 'Matte Black', price: 45000, status: 'limited', is_featured: true, image: null },
+  { id: '4', name: 'TE37', brand: 'Rays', size: '17x9', finish: 'Bronze', price: 65000, status: 'out_of_stock', is_featured: false, image: null },
+  { id: '5', name: 'RPF1', brand: 'Enkei', size: '16x7', finish: 'Silver', price: 28000, status: 'in_stock', is_featured: false, image: null },
+  { id: '6', name: 'Chromium', brand: 'XXR', size: '15x8', finish: 'Hyper Silver', price: 8500, status: 'in_stock', is_featured: false, image: null },
+  { id: '7', name: 'Hypergram', brand: 'Konig', size: '17x8', finish: 'Matte Bronze', price: 22000, status: 'in_stock', is_featured: false, image: null },
+  { id: '8', name: 'CV3', brand: 'Vossen', size: '18x8.5', finish: 'Gloss Black', price: 55000, status: 'limited', is_featured: false, image: null },
+  { id: '9', name: 'RS-GT', brand: 'BBS', size: '18x9', finish: 'Diamond Silver', price: 75000, status: 'out_of_stock', is_featured: false, image: null },
+  { id: '10', name: 'Ultraleggera', brand: 'OZ Racing', size: '17x7.5', finish: 'Race Gold', price: 38000, status: 'in_stock', is_featured: false, image: null },
+  { id: '11', name: 'Slipstream', brand: 'Rota', size: '16x7', finish: 'White', price: 11000, status: 'in_stock', is_featured: false, image: null },
+  { id: '12', name: 'Jager Daedalus', brand: 'Lenso', size: '17x7.5', finish: 'Hyper Black', price: 18000, status: 'in_stock', is_featured: false, image: null },
 ];
 
 const mags = sampleMags;
@@ -100,18 +100,28 @@ if (selectedSize) {
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredMags.map((mag) => {
             const stockStatus = getStockStatus(mag.status);
+            const imageUrl = getImageUrl(mag.image);
+            const hasImage = mag.image !== null && mag.image !== undefined;
             return (
               <div class="card overflow-hidden group">
-                <!-- Image Placeholder -->
-                <div class="aspect-square bg-dark-300 flex items-center justify-center relative">
-                  <div class="text-center p-4">
-                    <svg class="w-16 h-16 mx-auto text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" stroke-width="1.5" />
-                      <circle cx="12" cy="12" r="3" stroke-width="1.5" />
-                      <path stroke-linecap="round" stroke-width="1.5" d="M12 5v2M12 17v2M5 12h2M17 12h2M7.05 7.05l1.41 1.41M15.54 15.54l1.41 1.41M7.05 16.95l1.41-1.41M15.54 8.46l1.41-1.41" />
-                    </svg>
-                    <span class="text-xs text-gray-500">Wheel Image</span>
-                  </div>
+                <!-- Product Image -->
+                <div class="aspect-square bg-dark-300 flex items-center justify-center relative overflow-hidden">
+                  {hasImage ? (
+                    <img
+                      src={imageUrl}
+                      alt={`${mag.brand} ${mag.name}`}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div class="text-center p-4">
+                      <svg class="w-16 h-16 mx-auto text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke-width="1.5" />
+                        <circle cx="12" cy="12" r="3" stroke-width="1.5" />
+                        <path stroke-linecap="round" stroke-width="1.5" d="M12 5v2M12 17v2M5 12h2M17 12h2M7.05 7.05l1.41 1.41M15.54 15.54l1.41 1.41M7.05 16.95l1.41-1.41M15.54 8.46l1.41-1.41" />
+                      </svg>
+                      <span class="text-xs text-gray-500">No Image</span>
+                    </div>
+                  )}
                   {mag.is_featured && (
                     <div class="absolute top-3 left-3 badge badge-success">
                       Featured

@@ -2,22 +2,22 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Hero from '../../components/Hero.astro';
 import { tireBrands, rimSizes } from '../../lib/brands.js';
-import { formatPrice, getStockStatus } from '../../lib/directus.js';
+import { formatPrice, getStockStatus, getImageUrl } from '../../lib/directus.js';
 
 // Sample tire data (will be replaced with Directus data)
 const sampleTires = [
-  { id: '1', name: 'Ecopia EP150', brand: 'Bridgestone', size: '185/65R15', rim_size: '15', price: 4500, status: 'in_stock', is_featured: true },
-  { id: '2', name: 'Energy XM2+', brand: 'Michelin', size: '195/65R15', rim_size: '15', price: 5800, status: 'in_stock', is_featured: true },
-  { id: '3', name: 'Assurance TripleTred', brand: 'Goodyear', size: '205/55R16', rim_size: '16', price: 6200, status: 'limited', is_featured: true },
-  { id: '4', name: 'ContiPremiumContact 5', brand: 'Continental', size: '215/60R16', rim_size: '16', price: 7500, status: 'in_stock', is_featured: false },
-  { id: '5', name: 'SP Sport LM705', brand: 'Dunlop', size: '195/55R15', rim_size: '15', price: 4200, status: 'in_stock', is_featured: false },
-  { id: '6', name: 'BluEarth ES32', brand: 'Yokohama', size: '185/60R15', rim_size: '15', price: 3800, status: 'in_stock', is_featured: false },
-  { id: '7', name: 'Proxes CF2', brand: 'Toyo', size: '205/65R16', rim_size: '16', price: 5500, status: 'limited', is_featured: false },
-  { id: '8', name: 'Advantage T/A Sport', brand: 'BFGoodrich', size: '225/45R17', rim_size: '17', price: 6800, status: 'in_stock', is_featured: false },
-  { id: '9', name: 'Cinturato P7', brand: 'Pirelli', size: '215/55R17', rim_size: '17', price: 8200, status: 'out_of_stock', is_featured: false },
-  { id: '10', name: 'Ventus Prime 3', brand: 'Hankook', size: '195/60R15', rim_size: '15', price: 3500, status: 'in_stock', is_featured: false },
-  { id: '11', name: 'Ecsta PS71', brand: 'Kumho', size: '205/50R17', rim_size: '17', price: 4800, status: 'in_stock', is_featured: false },
-  { id: '12', name: 'Atrezzo ZSR', brand: 'Sailun', size: '185/55R15', rim_size: '15', price: 2800, status: 'in_stock', is_featured: false },
+  { id: '1', name: 'Ecopia EP150', brand: 'Bridgestone', size: '185/65R15', rim_size: '15', price: 4500, status: 'in_stock', is_featured: true, image: null },
+  { id: '2', name: 'Energy XM2+', brand: 'Michelin', size: '195/65R15', rim_size: '15', price: 5800, status: 'in_stock', is_featured: true, image: null },
+  { id: '3', name: 'Assurance TripleTred', brand: 'Goodyear', size: '205/55R16', rim_size: '16', price: 6200, status: 'limited', is_featured: true, image: null },
+  { id: '4', name: 'ContiPremiumContact 5', brand: 'Continental', size: '215/60R16', rim_size: '16', price: 7500, status: 'in_stock', is_featured: false, image: null },
+  { id: '5', name: 'SP Sport LM705', brand: 'Dunlop', size: '195/55R15', rim_size: '15', price: 4200, status: 'in_stock', is_featured: false, image: null },
+  { id: '6', name: 'BluEarth ES32', brand: 'Yokohama', size: '185/60R15', rim_size: '15', price: 3800, status: 'in_stock', is_featured: false, image: null },
+  { id: '7', name: 'Proxes CF2', brand: 'Toyo', size: '205/65R16', rim_size: '16', price: 5500, status: 'limited', is_featured: false, image: null },
+  { id: '8', name: 'Advantage T/A Sport', brand: 'BFGoodrich', size: '225/45R17', rim_size: '17', price: 6800, status: 'in_stock', is_featured: false, image: null },
+  { id: '9', name: 'Cinturato P7', brand: 'Pirelli', size: '215/55R17', rim_size: '17', price: 8200, status: 'out_of_stock', is_featured: false, image: null },
+  { id: '10', name: 'Ventus Prime 3', brand: 'Hankook', size: '195/60R15', rim_size: '15', price: 3500, status: 'in_stock', is_featured: false, image: null },
+  { id: '11', name: 'Ecsta PS71', brand: 'Kumho', size: '205/50R17', rim_size: '17', price: 4800, status: 'in_stock', is_featured: false, image: null },
+  { id: '12', name: 'Atrezzo ZSR', brand: 'Sailun', size: '185/55R15', rim_size: '15', price: 2800, status: 'in_stock', is_featured: false, image: null },
 ];
 
 const tires = sampleTires;
@@ -97,18 +97,28 @@ if (selectedRimSize) {
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredTires.map((tire) => {
             const stockStatus = getStockStatus(tire.status);
+            const imageUrl = getImageUrl(tire.image);
+            const hasImage = tire.image !== null && tire.image !== undefined;
             return (
               <div class="card overflow-hidden group">
-                <!-- Image Placeholder -->
-                <div class="aspect-square bg-dark-300 flex items-center justify-center relative">
-                  <div class="text-center p-4">
-                    <svg class="w-16 h-16 mx-auto text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="10" stroke-width="2" />
-                      <circle cx="12" cy="12" r="4" stroke-width="2" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
-                    </svg>
-                    <span class="text-xs text-gray-500">Tire Image</span>
-                  </div>
+                <!-- Product Image -->
+                <div class="aspect-square bg-dark-300 flex items-center justify-center relative overflow-hidden">
+                  {hasImage ? (
+                    <img
+                      src={imageUrl}
+                      alt={`${tire.brand} ${tire.name}`}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div class="text-center p-4">
+                      <svg class="w-16 h-16 mx-auto text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        <circle cx="12" cy="12" r="4" stroke-width="2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+                      </svg>
+                      <span class="text-xs text-gray-500">No Image</span>
+                    </div>
+                  )}
                   {tire.is_featured && (
                     <div class="absolute top-3 left-3 badge badge-success">
                       Featured
