@@ -11,8 +11,8 @@ interface Props {
 
 const {
   title = 'ECJ Tire Supply',
-  subtitle = 'Quality Tires & Expert Service',
-  description = 'Your trusted tire experts in Antipolo, Philippines. From tires and mags to alignment, balancing, and full car care services - we have got you covered.',
+  subtitle = 'Premium Tires & Expert Service',
+  description = 'Your trusted tire experts in Antipolo, Philippines. From tires and mags to alignment, balancing, and full car care services.',
   showStats = true,
   showCTA = true,
   backgroundImage,
@@ -22,97 +22,119 @@ const {
 
 <section class:list={[
   'relative overflow-hidden',
-  compact ? 'py-16 md:py-24' : 'py-20 md:py-32',
+  compact ? 'py-20 md:py-28' : 'min-h-[90vh] flex items-center',
 ]}>
-  <!-- Background -->
-  {backgroundImage ? (
-    <div class="absolute inset-0">
-      <img src={backgroundImage} alt="" class="w-full h-full object-cover" />
-      <div class="absolute inset-0 hero-overlay"></div>
-    </div>
-  ) : (
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-emerald-600"></div>
-  )}
+  <!-- Dark Industrial Background -->
+  <div class="absolute inset-0 bg-dark-100">
+    <!-- Grid pattern overlay -->
+    <div class="absolute inset-0 grid-pattern opacity-50"></div>
 
-  <!-- Decorative Elements -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
-    <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl"></div>
+    <!-- Gradient overlays -->
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent"></div>
+    <div class="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-secondary/5 to-transparent"></div>
+
+    <!-- Decorative glows -->
+    <div class="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 left-10 w-96 h-96 bg-secondary/5 rounded-full blur-3xl"></div>
+
+    <!-- Angular decorative lines -->
+    <svg class="absolute top-0 left-0 w-full h-full opacity-10" preserveAspectRatio="none">
+      <line x1="0" y1="100%" x2="100%" y2="0" stroke="url(#line-gradient)" stroke-width="1" />
+      <line x1="20%" y1="100%" x2="100%" y2="20%" stroke="url(#line-gradient)" stroke-width="0.5" />
+      <defs>
+        <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:0" />
+          <stop offset="50%" style="stop-color:#ff6b35;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#00d4ff;stop-opacity:0" />
+        </linearGradient>
+      </defs>
+    </svg>
   </div>
 
   <div class="container mx-auto px-4 relative z-10">
-    <div class="max-w-4xl mx-auto text-center text-white">
+    <div class:list={[
+      'max-w-5xl',
+      compact ? 'text-center mx-auto' : '',
+    ]}>
       {!compact && (
-        <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-          <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-          <span class="text-sm font-medium">Trusted Tire Experts in Antipolo</span>
+        <div class="section-badge animate-slide-up">
+          <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+          <span>Trusted Tire Experts in Antipolo</span>
         </div>
       )}
 
       <h1 class:list={[
-        'font-bold mb-4',
-        compact ? 'text-3xl md:text-4xl' : 'text-4xl md:text-6xl',
-      ]}>
-        {title}
+        'font-bold uppercase tracking-tight leading-none animate-slide-up',
+        compact ? 'text-4xl md:text-5xl' : 'text-5xl md:text-7xl lg:text-8xl',
+      ]} style="animation-delay: 0.1s;">
+        <span class="text-white">{title.split(' ')[0]}</span>
+        {title.split(' ').length > 1 && (
+          <span class="block gradient-text">{title.split(' ').slice(1).join(' ')}</span>
+        )}
       </h1>
 
       {subtitle && (
         <p class:list={[
-          'font-medium text-blue-100 mb-6',
-          compact ? 'text-lg md:text-xl' : 'text-xl md:text-2xl',
-        ]}>
+          'font-semibold text-secondary uppercase tracking-widest animate-slide-up',
+          compact ? 'text-lg mt-4' : 'text-xl md:text-2xl mt-6',
+        ]} style="animation-delay: 0.2s;">
           {subtitle}
         </p>
       )}
 
       {description && !compact && (
-        <p class="text-lg text-blue-100/90 max-w-2xl mx-auto mb-8">
+        <p class="text-gray-400 text-lg md:text-xl max-w-2xl mt-6 animate-slide-up" style="animation-delay: 0.3s;">
           {description}
         </p>
       )}
 
       {showCTA && !compact && (
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <a href="/book/" class="btn btn-accent text-lg px-8 py-4">
+        <div class="flex flex-col sm:flex-row gap-4 mt-10 animate-slide-up" style="animation-delay: 0.4s;">
+          <a href="/book/" class="btn btn-primary text-lg px-8 py-4">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             Book Appointment
           </a>
-          <a href="/services/" class="btn btn-white text-lg px-8 py-4">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          <a href="/services/" class="btn btn-secondary text-lg px-8 py-4">
             View Services
           </a>
         </div>
       )}
 
       {showStats && !compact && (
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 py-8 px-4 bg-white/10 backdrop-blur-sm rounded-2xl">
-          <div class="text-center">
-            <div class="text-3xl md:text-4xl font-bold">500+</div>
-            <div class="text-blue-100 text-sm">Happy Customers</div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-10 border-t border-dark-500/50 animate-slide-up" style="animation-delay: 0.5s;">
+          <div class="text-center md:text-left">
+            <div class="text-4xl md:text-5xl font-bold text-primary">500+</div>
+            <div class="text-gray-500 text-sm uppercase tracking-wider mt-1">Happy Customers</div>
           </div>
-          <div class="text-center">
-            <div class="text-3xl md:text-4xl font-bold">15+</div>
-            <div class="text-blue-100 text-sm">Tire Brands</div>
+          <div class="text-center md:text-left">
+            <div class="text-4xl md:text-5xl font-bold text-primary">15+</div>
+            <div class="text-gray-500 text-sm uppercase tracking-wider mt-1">Tire Brands</div>
           </div>
-          <div class="text-center">
-            <div class="text-3xl md:text-4xl font-bold">8AM-5PM</div>
-            <div class="text-blue-100 text-sm">Daily Service</div>
+          <div class="text-center md:text-left">
+            <div class="text-4xl md:text-5xl font-bold text-secondary">8-5</div>
+            <div class="text-gray-500 text-sm uppercase tracking-wider mt-1">Daily Service</div>
           </div>
-          <div class="text-center">
-            <div class="flex items-center justify-center gap-1">
-              <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+          <div class="text-center md:text-left">
+            <div class="flex items-center justify-center md:justify-start gap-2">
+              <svg class="w-8 h-8 text-warning" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              <span class="text-3xl md:text-4xl font-bold">4.9</span>
+              <span class="text-4xl md:text-5xl font-bold text-primary">4.9</span>
             </div>
-            <div class="text-blue-100 text-sm">Google Rating</div>
+            <div class="text-gray-500 text-sm uppercase tracking-wider mt-1">Google Rating</div>
           </div>
         </div>
       )}
     </div>
   </div>
+
+  {!compact && (
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </div>
+  )}
 </section>
