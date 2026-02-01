@@ -1,42 +1,46 @@
 @import "tailwindcss";
 
-/* ECJ Tires - DARK INDUSTRIAL THEME */
-/* Completely different from Wheelpower's orange/dark minimal style */
+/* ECJ Tires - MODERN CLEAN THEME */
+/* Cool contrasting tones to make warm logo pop */
 
 @theme {
-  /* Primary - Vibrant Orange/Red */
-  --color-primary: #ff6b35;
-  --color-primary-light: #ff8c5a;
-  --color-primary-dark: #e55a2b;
-
-  /* Secondary - Electric Cyan */
-  --color-secondary: #00d4ff;
-  --color-secondary-light: #5ce1ff;
-  --color-secondary-dark: #00a8cc;
-
-  /* Dark Industrial Backgrounds */
-  --color-dark: #0a0a0a;
-  --color-dark-100: #0f0f0f;
-  --color-dark-200: #141414;
-  --color-dark-300: #1a1a1a;
-  --color-dark-400: #242424;
-  --color-dark-500: #2e2e2e;
-  --color-dark-600: #3d3d3d;
-  --color-dark-700: #525252;
-  --color-dark-800: #6b6b6b;
+  /* Backgrounds - Cool Charcoal/Slate */
+  --color-dark: #0d1117;
+  --color-dark-100: #0d1117;
+  --color-dark-200: #161b22;
+  --color-dark-300: #21262d;
+  --color-dark-400: #30363d;
+  --color-dark-500: #3d454e;
+  --color-dark-600: #4a545e;
+  --color-dark-700: #6e7681;
+  --color-dark-800: #8b949e;
 
   /* Text */
-  --color-text: #ffffff;
-  --color-text-muted: #a0a0a0;
-  --color-text-dim: #666666;
+  --color-text: #f0f6fc;
+  --color-text-muted: #8b949e;
+  --color-text-dim: #6e7681;
+
+  /* Accent - Steel Blue */
+  --color-primary: #58a6ff;
+  --color-primary-light: #79b8ff;
+  --color-primary-dark: #388bfd;
+
+  /* Secondary - Subtle warm for special highlights */
+  --color-secondary: #8b949e;
+  --color-secondary-light: #a0aab4;
+  --color-secondary-dark: #6e7681;
 
   /* Status */
-  --color-success: #00ff88;
-  --color-warning: #ffcc00;
-  --color-danger: #ff4757;
+  --color-success: #3fb950;
+  --color-warning: #d29922;
+  --color-danger: #f85149;
 
-  /* Fonts - Industrial/Bold */
-  --font-sans: 'Rajdhani', 'Bebas Neue', system-ui, sans-serif;
+  /* Borders */
+  --color-border: #30363d;
+  --color-border-hover: #8b949e;
+
+  /* Fonts - Clean Modern */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 /* Base */
@@ -52,7 +56,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom Scrollbar - Industrial */
+/* Custom Scrollbar - Clean */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -62,124 +66,92 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
-  border-radius: 0;
+  background: var(--color-dark-500);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary-light);
+  background: var(--color-dark-600);
 }
 
 /* ============================================
-   INDUSTRIAL COMPONENTS
+   MODERN CLEAN COMPONENTS
    ============================================ */
 
-/* Industrial Button - Angular, Bold */
+/* Clean Button - Rounded */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.875rem 2rem;
-  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
   font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  border-radius: 0.5rem;
   border: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-  left: 100%;
+  transition: all 0.2s ease;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
-  color: white;
-  box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+  background: var(--color-text);
+  color: var(--color-dark);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+  background: var(--color-text-muted);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
   background: transparent;
-  color: var(--color-secondary);
-  border: 2px solid var(--color-secondary);
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover {
-  background: var(--color-secondary);
-  color: var(--color-dark);
-  box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+  border-color: var(--color-border-hover);
+  background: var(--color-dark-300);
 }
 
 .btn-outline {
-  background: rgba(255, 255, 255, 0.05);
+  background: transparent;
   color: var(--color-text);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  clip-path: none;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
 }
 
 .btn-outline:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background: var(--color-dark-300);
+  border-color: var(--color-border-hover);
 }
 
-/* Glassmorphism Card */
+.btn-accent {
+  background: var(--color-primary);
+  color: var(--color-dark);
+}
+
+.btn-accent:hover {
+  background: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
+/* Clean Card */
 .card {
-  background: rgba(20, 20, 20, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.card:hover::before {
-  opacity: 1;
+  background: var(--color-dark-200);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
 }
 
 .card:hover {
-  border-color: rgba(255, 107, 53, 0.3);
-  transform: translateY(-4px);
+  border-color: var(--color-border-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Section Styles */
 .section {
-  padding: 6rem 1rem;
+  padding: 5rem 1rem;
   position: relative;
 }
 
@@ -197,37 +169,39 @@ body {
   padding: 0 1.5rem;
 }
 
-/* Section Headers - Industrial Style */
+/* Section Headers - Clean Style */
 .section-badge {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 107, 53, 0.1);
-  border: 1px solid rgba(255, 107, 53, 0.3);
-  color: var(--color-primary);
+  background: var(--color-dark-300);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  color: var(--color-text-muted);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.1em;
   margin-bottom: 1rem;
 }
 
-/* Form Styles - Industrial */
+/* Form Styles - Clean */
 .form-input {
   width: 100%;
-  padding: 1rem 1.25rem;
+  padding: 0.875rem 1rem;
   background: var(--color-dark-300);
-  border: 1px solid var(--color-dark-500);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
   color: var(--color-text);
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
 }
 
 .form-input::placeholder {
@@ -237,10 +211,8 @@ body {
 .form-label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   color: var(--color-text-muted);
 }
 
@@ -250,50 +222,33 @@ body {
   align-items: center;
   padding: 0.375rem 0.75rem;
   font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 500;
+  border-radius: 9999px;
 }
 
 .badge-success {
-  background: rgba(0, 255, 136, 0.15);
+  background: rgba(63, 185, 80, 0.15);
   color: var(--color-success);
-  border: 1px solid rgba(0, 255, 136, 0.3);
+  border: 1px solid rgba(63, 185, 80, 0.3);
 }
 
 .badge-warning {
-  background: rgba(255, 204, 0, 0.15);
+  background: rgba(210, 153, 34, 0.15);
   color: var(--color-warning);
-  border: 1px solid rgba(255, 204, 0, 0.3);
+  border: 1px solid rgba(210, 153, 34, 0.3);
 }
 
 .badge-danger {
-  background: rgba(255, 71, 87, 0.15);
+  background: rgba(248, 81, 73, 0.15);
   color: var(--color-danger);
-  border: 1px solid rgba(255, 71, 87, 0.3);
+  border: 1px solid rgba(248, 81, 73, 0.3);
 }
 
-/* Gradient Text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Grid Pattern Background */
-.grid-pattern {
-  background-image:
-    linear-gradient(rgba(255, 107, 53, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 107, 53, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
-}
-
-/* Animations */
+/* Animations - Subtle */
 @keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -301,21 +256,21 @@ body {
   }
 }
 
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  50% {
-    box-shadow: 0 0 40px rgba(255, 107, 53, 0.5);
+  to {
+    opacity: 1;
   }
 }
 
 .animate-slide-up {
-  animation: slideInUp 0.6s ease-out forwards;
+  animation: slideInUp 0.5s ease-out forwards;
 }
 
-.animate-glow {
-  animation: glow 2s ease-in-out infinite;
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 /* Utility */
@@ -326,4 +281,14 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Link styles */
+a.text-link {
+  color: var(--color-primary);
+  transition: color 0.2s ease;
+}
+
+a.text-link:hover {
+  color: var(--color-primary-light);
 }
