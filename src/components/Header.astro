@@ -20,21 +20,8 @@ function isActive(href: string): boolean {
 
 <header class="fixed w-full top-0 z-50 bg-dark-100/95 backdrop-blur-md border-b border-dark-400">
   <div class="container mx-auto px-4">
-    <!-- Logo Row - Centered -->
-    <div class="flex justify-center py-4 border-b border-dark-300">
-      <a href="/" class="flex flex-col items-center gap-1 group">
-        <!-- Logo Image - Replace src with your actual logo -->
-        <img
-          src="/logo.png"
-          alt="ECJ Tires Logo"
-          class="h-16 md:h-20 w-auto object-contain"
-        />
-        <span class="text-xs text-gray-500 tracking-wider">Tire Supply & Auto Repair Shop</span>
-      </a>
-    </div>
-
     <!-- Navigation Row -->
-    <nav class="flex items-center justify-center py-3">
+    <nav class="flex items-center justify-center py-4">
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center gap-1">
         {navLinks.map((link) => (
@@ -95,7 +82,7 @@ function isActive(href: string): boolean {
 </header>
 
 <!-- Spacer for fixed header -->
-<div class="h-36 md:h-40"></div>
+<div class="h-16 md:h-18"></div>
 
 <script>
   const menuBtn = document.getElementById('mobile-menu-btn');
