@@ -1,0 +1,194 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import Hero from '../../components/Hero.astro';
+import { magBrands, rimSizes } from '../../lib/brands.js';
+import { formatPrice, getStockStatus } from '../../lib/directus.js';
+
+// Sample mags data (will be replaced with Directus data)
+const sampleMags = [
+  { id: '1', name: 'Grid', brand: 'Rota', size: '15x7', finish: 'Gunmetal', price: 12000, status: 'in_stock', is_featured: true },
+  { id: '2', name: 'D1 Spec', brand: 'Lenso', size: '16x7', finish: 'Black Chrome', price: 15000, status: 'in_stock', is_featured: true },
+  { id: '3', name: 'Emotion CR-KAI', brand: 'Work', size: '17x8', finish: 'Matte Black', price: 45000, status: 'limited', is_featured: true },
+  { id: '4', name: 'TE37', brand: 'Rays', size: '17x9', finish: 'Bronze', price: 65000, status: 'out_of_stock', is_featured: false },
+  { id: '5', name: 'RPF1', brand: 'Enkei', size: '16x7', finish: 'Silver', price: 28000, status: 'in_stock', is_featured: false },
+  { id: '6', name: 'Chromium', brand: 'XXR', size: '15x8', finish: 'Hyper Silver', price: 8500, status: 'in_stock', is_featured: false },
+  { id: '7', name: 'Hypergram', brand: 'Konig', size: '17x8', finish: 'Matte Bronze', price: 22000, status: 'in_stock', is_featured: false },
+  { id: '8', name: 'CV3', brand: 'Vossen', size: '18x8.5', finish: 'Gloss Black', price: 55000, status: 'limited', is_featured: false },
+  { id: '9', name: 'RS-GT', brand: 'BBS', size: '18x9', finish: 'Diamond Silver', price: 75000, status: 'out_of_stock', is_featured: false },
+  { id: '10', name: 'Ultraleggera', brand: 'OZ Racing', size: '17x7.5', finish: 'Race Gold', price: 38000, status: 'in_stock', is_featured: false },
+  { id: '11', name: 'Slipstream', brand: 'Rota', size: '16x7', finish: 'White', price: 11000, status: 'in_stock', is_featured: false },
+  { id: '12', name: 'Jager Daedalus', brand: 'Lenso', size: '17x7.5', finish: 'Hyper Black', price: 18000, status: 'in_stock', is_featured: false },
+];
+
+const mags = sampleMags;
+
+// Get URL params for filtering
+const url = Astro.url;
+const selectedBrand = url.searchParams.get('brand') || '';
+const selectedSize = url.searchParams.get('size') || '';
+
+// Get unique sizes from mags
+const availableSizes = [...new Set(mags.map(m => m.size.split('x')[0]))].sort((a, b) => parseInt(a) - parseInt(b));
+
+// Filter mags
+let filteredMags = mags;
+if (selectedBrand) {
+  filteredMags = filteredMags.filter(m => m.brand === selectedBrand);
+}
+if (selectedSize) {
+  filteredMags = filteredMags.filter(m => m.size.startsWith(selectedSize));
+}
+---
+
+<MainLayout title="Mags & Wheels - ECJ Tire Supply">
+  <Hero
+    title="Mags & Wheels"
+    subtitle="Upgrade Your Ride"
+    description="Browse our collection of quality mags and wheels from top brands. Find the perfect wheels to match your style."
+    showStats={false}
+    showCTA={false}
+    compact={true}
+  />
+
+  <section class="section">
+    <div class="container mx-auto px-4">
+      <!-- Filters -->
+      <div class="card p-6 mb-8">
+        <form method="get" class="flex flex-wrap gap-4 items-end">
+          <div class="flex-1 min-w-[200px]">
+            <label class="form-label">Brand</label>
+            <select name="brand" class="form-input">
+              <option value="">All Brands</option>
+              {magBrands.map((brand) => (
+                <option value={brand} selected={selectedBrand === brand}>{brand}</option>
+              ))}
+            </select>
+          </div>
+          <div class="flex-1 min-w-[200px]">
+            <label class="form-label">Size</label>
+            <select name="size" class="form-input">
+              <option value="">All Sizes</option>
+              {availableSizes.map((size) => (
+                <option value={size} selected={selectedSize === size}>{size}"</option>
+              ))}
+            </select>
+          </div>
+          <div class="flex gap-2">
+            <button type="submit" class="btn btn-primary">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Filter
+            </button>
+            {(selectedBrand || selectedSize) && (
+              <a href="/mags/" class="btn btn-outline">Clear</a>
+            )}
+          </div>
+        </form>
+      </div>
+
+      <!-- Results count -->
+      <div class="mb-6">
+        <p class="text-gray-600">
+          Showing <span class="font-semibold text-gray-900">{filteredMags.length}</span> wheel{filteredMags.length !== 1 ? 's' : ''}
+          {selectedBrand && <span> from <span class="font-semibold">{selectedBrand}</span></span>}
+          {selectedSize && <span> in <span class="font-semibold">{selectedSize}" size</span></span>}
+        </p>
+      </div>
+
+      <!-- Mags Grid -->
+      {filteredMags.length > 0 ? (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredMags.map((mag) => {
+            const stockStatus = getStockStatus(mag.status);
+            return (
+              <div class="card overflow-hidden group">
+                <!-- Image Placeholder -->
+                <div class="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative">
+                  <div class="text-center p-4">
+                    <svg class="w-20 h-20 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" stroke-width="1.5" />
+                      <circle cx="12" cy="12" r="3" stroke-width="1.5" />
+                      <path stroke-linecap="round" stroke-width="1.5" d="M12 5v2M12 17v2M5 12h2M17 12h2M7.05 7.05l1.41 1.41M15.54 15.54l1.41 1.41M7.05 16.95l1.41-1.41M15.54 8.46l1.41-1.41" />
+                    </svg>
+                    <span class="text-sm text-gray-500">Wheel Image</span>
+                  </div>
+                  {mag.is_featured && (
+                    <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                      Featured
+                    </div>
+                  )}
+                  <div class={`absolute top-3 right-3 badge ${stockStatus.class}`}>
+                    {stockStatus.label}
+                  </div>
+                </div>
+
+                <div class="p-4">
+                  <div class="text-sm text-blue-600 font-semibold mb-1">{mag.brand}</div>
+                  <h3 class="font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{mag.name}</h3>
+
+                  <div class="space-y-1 text-sm text-gray-600 mb-3">
+                    <div class="flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                      </svg>
+                      <span>Size: {mag.size}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                      </svg>
+                      <span>Finish: {mag.finish}</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between">
+                    <div class="text-xl font-bold text-gray-900">
+                      {formatPrice(mag.price)}
+                    </div>
+                    <span class="text-xs text-gray-500">per piece</span>
+                  </div>
+
+                  <a
+                    href={`/contact/?inquiry=mags&item=${encodeURIComponent(mag.brand + ' ' + mag.name)}`}
+                    class="mt-4 w-full btn btn-primary text-sm block text-center"
+                  >
+                    Inquire Now
+                  </a>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">No wheels found</h3>
+          <p class="text-gray-600 mb-4">Try adjusting your filters or browse all wheels.</p>
+          <a href="/mags/" class="btn btn-primary">View All Wheels</a>
+        </div>
+      )}
+
+      <!-- Custom Order CTA -->
+      <div class="mt-12 card p-8 bg-gradient-to-r from-blue-50 to-emerald-50 border-0">
+        <div class="md:flex items-center justify-between">
+          <div class="mb-4 md:mb-0">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Looking for specific wheels?</h3>
+            <p class="text-gray-600">We can help you find or order the exact wheels you need. Just let us know!</p>
+          </div>
+          <div class="flex gap-3">
+            <a href="/contact/" class="btn btn-primary">Contact Us</a>
+            <a href="tel:+639123456789" class="btn btn-outline">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              Call Now
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>

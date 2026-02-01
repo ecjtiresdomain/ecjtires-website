@@ -1,0 +1,296 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Hero from '../components/Hero.astro';
+
+// Fallback data
+const branches = [
+  { id: '1', name: 'ECJ Tires (Main Branch)' },
+  { id: '2', name: 'ECJL Tires' },
+];
+
+const services = [
+  { id: '1', name: 'Tire Installation & Mounting' },
+  { id: '2', name: 'Wheel Alignment' },
+  { id: '3', name: 'Tire Balancing' },
+  { id: '4', name: 'Vulcanizing / Tire Repair' },
+  { id: '5', name: 'Change Oil' },
+  { id: '6', name: 'Brake Service' },
+  { id: '7', name: 'Underchassis Repair' },
+  { id: '8', name: 'Battery Service' },
+  { id: '9', name: 'Aircon Cleaning' },
+  { id: '10', name: 'Other Service' },
+];
+
+// Generate time slots
+const timeSlots = [
+  '8:00 AM',
+  '8:30 AM',
+  '9:00 AM',
+  '9:30 AM',
+  '10:00 AM',
+  '10:30 AM',
+  '11:00 AM',
+  '11:30 AM',
+  '1:00 PM',
+  '1:30 PM',
+  '2:00 PM',
+  '2:30 PM',
+  '3:00 PM',
+  '3:30 PM',
+  '4:00 PM',
+];
+---
+
+<MainLayout title="Book an Appointment - ECJ Tire Supply">
+  <Hero
+    title="Book an Appointment"
+    subtitle="Schedule Your Service"
+    description="Book your tire service appointment online. Choose your preferred branch, service, date, and time."
+    showStats={false}
+    showCTA={false}
+    compact={true}
+  />
+
+  <section class="section">
+    <div class="container mx-auto px-4 max-w-3xl">
+      <div class="card p-8">
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-emerald-500 rounded-2xl mb-4">
+            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900">Schedule Your Visit</h2>
+          <p class="text-gray-600 mt-2">Fill out the form below and we will confirm your appointment.</p>
+        </div>
+
+        <form id="booking-form" class="space-y-6">
+          <!-- Step indicator -->
+          <div class="flex items-center justify-center gap-2 mb-8">
+            <div class="flex items-center gap-2 text-sm font-medium text-blue-600">
+              <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs">1</span>
+              <span class="hidden sm:inline">Service</span>
+            </div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+            <div class="flex items-center gap-2 text-sm font-medium text-gray-400">
+              <span class="w-6 h-6 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center text-xs">2</span>
+              <span class="hidden sm:inline">Date & Time</span>
+            </div>
+            <div class="w-8 h-0.5 bg-gray-200"></div>
+            <div class="flex items-center gap-2 text-sm font-medium text-gray-400">
+              <span class="w-6 h-6 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center text-xs">3</span>
+              <span class="hidden sm:inline">Your Info</span>
+            </div>
+          </div>
+
+          <!-- Branch Selection -->
+          <div>
+            <label for="branch" class="form-label">Select Branch <span class="text-red-500">*</span></label>
+            <select id="branch" name="branch" required class="form-input">
+              <option value="">Choose a branch</option>
+              {branches.map((branch) => (
+                <option value={branch.id}>{branch.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Service Selection -->
+          <div>
+            <label class="form-label">Select Service(s) <span class="text-red-500">*</span></label>
+            <div class="grid sm:grid-cols-2 gap-3 mt-2">
+              {services.map((service) => (
+                <label class="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+                  <input type="checkbox" name="services" value={service.id} class="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" />
+                  <span class="text-gray-700">{service.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- Date Selection -->
+          <div class="grid sm:grid-cols-2 gap-6">
+            <div>
+              <label for="date" class="form-label">Preferred Date <span class="text-red-500">*</span></label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                required
+                class="form-input"
+                min={new Date().toISOString().split('T')[0]}
+              />
+            </div>
+            <div>
+              <label for="time" class="form-label">Preferred Time <span class="text-red-500">*</span></label>
+              <select id="time" name="time" required class="form-input">
+                <option value="">Select a time</option>
+                {timeSlots.map((time) => (
+                  <option value={time}>{time}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <!-- Vehicle Info -->
+          <div class="border-t border-gray-200 pt-6">
+            <h3 class="font-semibold text-gray-900 mb-4">Vehicle Information</h3>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label for="vehicle-make" class="form-label">Make/Brand</label>
+                <input type="text" id="vehicle-make" name="vehicle_make" class="form-input" placeholder="e.g., Toyota" />
+              </div>
+              <div>
+                <label for="vehicle-model" class="form-label">Model</label>
+                <input type="text" id="vehicle-model" name="vehicle_model" class="form-input" placeholder="e.g., Vios" />
+              </div>
+              <div>
+                <label for="vehicle-year" class="form-label">Year</label>
+                <input type="text" id="vehicle-year" name="vehicle_year" class="form-input" placeholder="e.g., 2020" />
+              </div>
+              <div>
+                <label for="vehicle-plate" class="form-label">Plate Number</label>
+                <input type="text" id="vehicle-plate" name="vehicle_plate" class="form-input" placeholder="e.g., ABC 1234" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="border-t border-gray-200 pt-6">
+            <h3 class="font-semibold text-gray-900 mb-4">Contact Information</h3>
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label for="name" class="form-label">Full Name <span class="text-red-500">*</span></label>
+                <input type="text" id="name" name="name" required class="form-input" placeholder="Juan Dela Cruz" />
+              </div>
+              <div>
+                <label for="phone" class="form-label">Phone Number <span class="text-red-500">*</span></label>
+                <input type="tel" id="phone" name="phone" required class="form-input" placeholder="+63 912 345 6789" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-input" placeholder="juan@email.com" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div>
+            <label for="notes" class="form-label">Additional Notes</label>
+            <textarea
+              id="notes"
+              name="notes"
+              rows="3"
+              class="form-input resize-none"
+              placeholder="Any special requests or additional information..."
+            ></textarea>
+          </div>
+
+          <!-- Submit -->
+          <div class="flex flex-col sm:flex-row gap-4 pt-4">
+            <button type="submit" class="btn btn-accent flex-1 py-4">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Book Appointment
+            </button>
+            <a href="tel:+639123456789" class="btn btn-outline flex-1 py-4 text-center">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              Or Call Us
+            </a>
+          </div>
+        </form>
+
+        <!-- Success message (hidden by default) -->
+        <div id="booking-success" class="hidden text-center py-12">
+          <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-2">Booking Request Sent!</h3>
+          <p class="text-gray-600 mb-6">Thank you for your booking request. We will contact you shortly to confirm your appointment.</p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="btn btn-primary">Back to Home</a>
+            <a href="/contact/" class="btn btn-outline">Contact Us</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Cards -->
+      <div class="grid sm:grid-cols-3 gap-6 mt-8">
+        <div class="card p-6 text-center">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1">Quick Confirmation</h3>
+          <p class="text-sm text-gray-600">We will confirm your appointment within a few hours.</p>
+        </div>
+        <div class="card p-6 text-center">
+          <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1">No Obligation</h3>
+          <p class="text-sm text-gray-600">Free to reschedule or cancel if plans change.</p>
+        </div>
+        <div class="card p-6 text-center">
+          <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-gray-900 mb-1">Expert Service</h3>
+          <p class="text-sm text-gray-600">Professional technicians at your service.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
+
+<script>
+  // Simple form handling (demo only - replace with actual form submission)
+  const form = document.getElementById('booking-form');
+  const successMessage = document.getElementById('booking-success');
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Check if at least one service is selected
+    const services = form.querySelectorAll('input[name="services"]:checked');
+    if (services.length === 0) {
+      alert('Please select at least one service.');
+      return;
+    }
+
+    // Simulate form submission
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.innerHTML = `
+        <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Processing...
+      `;
+      submitBtn.setAttribute('disabled', 'true');
+    }
+
+    setTimeout(() => {
+      form.classList.add('hidden');
+      successMessage?.classList.remove('hidden');
+    }, 1500);
+  });
+</script>
+
+<style>
+  /* Custom checkbox styling for service selection */
+  input[type="checkbox"]:checked + span {
+    color: #1d4ed8;
+    font-weight: 500;
+  }
+</style>

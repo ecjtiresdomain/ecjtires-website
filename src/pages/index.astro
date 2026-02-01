@@ -1,0 +1,307 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Hero from '../components/Hero.astro';
+import { tireBrands, serviceIcons } from '../lib/brands.js';
+
+// Fallback data when Directus is not available
+const fallbackBranches = [
+  {
+    id: '1',
+    name: 'ECJ Tires',
+    is_main_branch: true,
+    address: 'Main Street, Antipolo City, Rizal',
+    phone: '+63 912 345 6789',
+    operating_hours: '8:00 AM - 5:00 PM Daily',
+    email: 'ecjtires@email.com',
+  },
+  {
+    id: '2',
+    name: 'ECJL Tires',
+    is_main_branch: false,
+    address: 'Second Branch Location, Antipolo City, Rizal',
+    phone: '+63 912 345 6790',
+    operating_hours: '8:00 AM - 5:00 PM Daily',
+    email: 'ecjltires@email.com',
+  },
+];
+
+const fallbackServices = [
+  { id: '1', name: 'Tire Installation', slug: 'tire-installation', short_description: 'Professional tire mounting and installation for all vehicle types.', icon: 'tire-installation' },
+  { id: '2', name: 'Wheel Alignment', slug: 'wheel-alignment', short_description: 'Precision alignment to extend tire life and improve handling.', icon: 'wheel-alignment' },
+  { id: '3', name: 'Tire Balancing', slug: 'tire-balancing', short_description: 'Computer-balanced wheels for a smooth, vibration-free ride.', icon: 'tire-balancing' },
+  { id: '4', name: 'Vulcanizing', slug: 'vulcanizing', short_description: 'Expert tire repair and patching services.', icon: 'vulcanizing' },
+  { id: '5', name: 'Change Oil', slug: 'change-oil', short_description: 'Quality oil change service to keep your engine running smoothly.', icon: 'change-oil' },
+  { id: '6', name: 'Brake Service', slug: 'brake-service', short_description: 'Complete brake inspection, repair, and replacement.', icon: 'brake-service' },
+];
+
+const fallbackTestimonials = [
+  { id: '1', customer_name: 'Juan Dela Cruz', location: 'Antipolo', rating: 5, content: 'Excellent service! The team was professional and the prices are very reasonable. Highly recommended!' },
+  { id: '2', customer_name: 'Maria Santos', location: 'Marikina', rating: 5, content: 'Fast and reliable. I\'ve been coming here for years and they never disappoint.' },
+  { id: '3', customer_name: 'Pedro Reyes', location: 'Cainta', rating: 5, content: 'Best tire shop in the area. Great selection of tires and excellent customer service.' },
+];
+
+const branches = fallbackBranches;
+const services = fallbackServices;
+const testimonials = fallbackTestimonials;
+---
+
+<MainLayout title="ECJ Tire Supply - Quality Tires & Expert Service in Antipolo">
+  <!-- Hero Section -->
+  <Hero />
+
+  <!-- Branch Showcase Section -->
+  <section class="section section-alt">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">Our Locations</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Visit Our Branches</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Two convenient locations to serve you better. Quality tires and expert service at both branches.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        {branches.map((branch) => (
+          <div class="card overflow-hidden">
+            {branch.is_main_branch && (
+              <div class="bg-gradient-to-r from-blue-600 to-emerald-500 text-white text-center py-2 text-sm font-semibold">
+                Main Branch
+              </div>
+            )}
+            <div class="p-6">
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">{branch.name}</h3>
+
+              <div class="space-y-3 text-gray-600">
+                <div class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>{branch.address}</span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span>{branch.phone}</span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>{branch.operating_hours}</span>
+                </div>
+              </div>
+
+              <!-- Map Placeholder -->
+              <div class="mt-6 aspect-video rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                <div class="text-center text-gray-400">
+                  <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <p class="text-sm">Map Coming Soon</p>
+                </div>
+              </div>
+
+              <div class="mt-6 flex gap-3">
+                <a href={`tel:${branch.phone}`} class="flex-1 btn btn-primary text-center">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  Call Now
+                </a>
+                <a href="/contact/" class="flex-1 btn btn-outline text-center">
+                  Get Directions
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Services Section -->
+  <section class="section">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="inline-block bg-emerald-100 text-emerald-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">What We Offer</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">From tire installation to complete car care, we provide comprehensive automotive services.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {services.map((service) => (
+          <div class="card p-6 group">
+            <div class="w-14 h-14 bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+              <span class="text-2xl">{serviceIcons[service.icon] || serviceIcons.default}</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">{service.name}</h3>
+            <p class="text-gray-600 mb-4">{service.short_description}</p>
+            <a href={`/services/#${service.slug}`} class="inline-flex items-center text-blue-600 font-medium hover:text-blue-700 transition-colors">
+              Learn More
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-10">
+        <a href="/services/" class="btn btn-primary">
+          View All Services
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us Section -->
+  <section class="section section-alt">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="inline-block bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">Why ECJ Tires</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose Us?</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">We are committed to providing the best tire services in Antipolo and surrounding areas.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Quality Guaranteed</h3>
+          <p class="text-gray-600 text-sm">We only use premium quality tires and genuine parts for all our services.</p>
+        </div>
+
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Fair Pricing</h3>
+          <p class="text-gray-600 text-sm">Competitive prices without compromising on quality or service.</p>
+        </div>
+
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Fast Service</h3>
+          <p class="text-gray-600 text-sm">Quick turnaround time so you can get back on the road faster.</p>
+        </div>
+
+        <div class="text-center p-6">
+          <div class="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Expert Team</h3>
+          <p class="text-gray-600 text-sm">Experienced technicians who know tires inside and out.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tire Brands Section -->
+  <section class="section">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="inline-block bg-gray-100 text-gray-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">Premium Selection</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trusted Tire Brands</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">We carry a wide selection of top tire brands to fit every need and budget.</p>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10 max-w-5xl mx-auto">
+        {tireBrands.slice(0, 12).map((brand) => (
+          <div class="bg-white px-6 py-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all duration-300">
+            <span class="text-gray-700 font-semibold">{brand}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="text-center mt-10">
+        <a href="/tires/" class="btn btn-outline">
+          Browse All Tires
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section section-alt">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-12">
+        <span class="inline-block bg-yellow-100 text-yellow-600 px-4 py-1 rounded-full text-sm font-semibold mb-4">Customer Reviews</span>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Don't just take our word for it. Here's what our valued customers have to say.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {testimonials.map((testimonial) => (
+          <div class="card p-6">
+            <div class="flex gap-1 mb-4">
+              {Array.from({ length: testimonial.rating }).map(() => (
+                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <p class="text-gray-600 mb-4 italic">"{testimonial.content}"</p>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold">
+                {testimonial.customer_name.charAt(0)}
+              </div>
+              <div>
+                <div class="font-semibold text-gray-900">{testimonial.customer_name}</div>
+                <div class="text-sm text-gray-500">{testimonial.location}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 bg-gradient-to-r from-blue-600 via-blue-700 to-emerald-600 relative overflow-hidden">
+    <div class="absolute inset-0 overflow-hidden">
+      <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-400/20 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="container mx-auto px-4 relative z-10">
+      <div class="max-w-3xl mx-auto text-center text-white">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Get Rolling?</h2>
+        <p class="text-xl text-blue-100 mb-8">Book an appointment today or visit any of our branches. We are here to help!</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/book/" class="btn btn-accent text-lg px-8 py-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Book Appointment
+          </a>
+          <a href="/contact/" class="btn btn-white text-lg px-8 py-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</MainLayout>
