@@ -2,6 +2,11 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import Hero from '../components/Hero.astro';
 import { tireBrands, serviceIcons } from '../lib/brands.js';
+import { getSiteSettings, getImageUrl } from '../lib/directus.js';
+
+// Fetch site settings for hero background
+const siteSettings = await getSiteSettings();
+const heroBackgroundUrl = siteSettings?.hero_background ? getImageUrl(siteSettings.hero_background) : null;
 
 // Fallback data when Directus is not available
 const fallbackBranches = [
@@ -40,7 +45,7 @@ const services = fallbackServices;
 
 <MainLayout title="ECJ Tire Supply - Quality Tires & Expert Service in Antipolo">
   <!-- Hero Section -->
-  <Hero />
+  <Hero backgroundImage={heroBackgroundUrl} />
 
   <!-- Branch Showcase Section -->
   <section class="py-16 bg-dark-200">

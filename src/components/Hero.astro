@@ -16,14 +16,27 @@ const {
   backgroundImage,
   compact = false,
 } = Astro.props;
+
+const hasBackground = backgroundImage && backgroundImage !== '/placeholder.jpg';
 ---
 
 <section class:list={[
   'relative overflow-hidden',
   compact ? 'py-16 md:py-24' : 'min-h-[70vh] flex items-center',
 ]}>
-  <!-- Clean Background -->
-  <div class="absolute inset-0 bg-gradient-to-b from-dark-100 via-dark-200 to-dark-100"></div>
+  <!-- Background Image or Gradient -->
+  {hasBackground ? (
+    <div class="absolute inset-0">
+      <img
+        src={backgroundImage}
+        alt=""
+        class="w-full h-full object-cover"
+      />
+      <div class="absolute inset-0 bg-dark-100/70"></div>
+    </div>
+  ) : (
+    <div class="absolute inset-0 bg-gradient-to-b from-dark-100 via-dark-200 to-dark-100"></div>
+  )}
 
   <div class="container mx-auto px-4 relative z-10">
     <div class:list={[
