@@ -1,9 +1,10 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import Hero from '../components/Hero.astro';
+import { getBranches } from '../lib/directus.js';
 
 // Fallback branch data
-const branches = [
+const fallbackBranches = [
   {
     id: '1',
     name: 'ECJ Tires',
@@ -23,6 +24,10 @@ const branches = [
     operating_hours: '8:00 AM - 5:00 PM Daily',
   },
 ];
+
+// Fetch from Directus with fallback
+const directusBranches = await getBranches();
+const branches = directusBranches.length > 0 ? directusBranches : fallbackBranches;
 
 // Get URL params for pre-filled inquiry
 const url = Astro.url;
@@ -237,15 +242,28 @@ const inquiryItem = url.searchParams.get('item') || '';
                   </div>
                 </div>
 
-                <!-- Map Placeholder -->
-                <div class="aspect-video rounded-lg overflow-hidden bg-dark-300 border border-dark-500 flex items-center justify-center mb-6 group-hover:border-primary/50 transition-colors">
-                  <div class="text-center text-gray-500">
-                    <svg class="w-12 h-12 mx-auto mb-2 text-primary/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    <p class="text-sm uppercase tracking-wider">Map Coming Soon</p>
-                  </div>
+                <!-- Map Section -->
+                <div class="aspect-video rounded-lg overflow-hidden bg-dark-300 border border-dark-500 mb-6 group-hover:border-primary/50 transition-colors">
+                  {branch.map_embed_url ? (
+                    <iframe
+                      src={branch.map_embed_url}
+                      class="w-full h-full"
+                      style="border:0;"
+                      allowfullscreen=""
+                      loading="lazy"
+                      referrerpolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                  ) : (
+                    <div class="w-full h-full flex items-center justify-center">
+                      <div class="text-center text-gray-500">
+                        <svg class="w-12 h-12 mx-auto mb-2 text-primary/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <p class="text-sm uppercase tracking-wider">Map Coming Soon</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div class="flex gap-3">

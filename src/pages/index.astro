@@ -2,7 +2,7 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import Hero from '../components/Hero.astro';
 import { tireBrands, serviceIcons } from '../lib/brands.js';
-import { getSiteSettings, getImageUrl } from '../lib/directus.js';
+import { getSiteSettings, getImageUrl, getBranches, getServices } from '../lib/directus.js';
 
 // Fetch site settings for hero background
 const siteSettings = await getSiteSettings();
@@ -39,8 +39,11 @@ const fallbackServices = [
   { id: '6', name: 'Brake Service', slug: 'brake-service', short_description: 'Complete brake inspection, repair, and replacement.', icon: 'brake-service' },
 ];
 
-const branches = fallbackBranches;
-const services = fallbackServices;
+// Fetch from Directus with fallback
+const directusBranches = await getBranches();
+const directusServices = await getServices();
+const branches = directusBranches.length > 0 ? directusBranches : fallbackBranches;
+const services = directusServices.length > 0 ? directusServices : fallbackServices;
 ---
 
 <MainLayout title="ECJ Tire Supply - Quality Tires & Expert Service in Antipolo">
@@ -102,15 +105,28 @@ const services = fallbackServices;
                 </div>
               </div>
 
-              <!-- Map Placeholder -->
-              <div class="mt-6 aspect-video rounded-lg overflow-hidden bg-dark-300 border border-dark-400 flex items-center justify-center">
-                <div class="text-center text-gray-500">
-                  <svg class="w-10 h-10 mx-auto mb-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  <p class="text-sm">Map Coming Soon</p>
-                </div>
+              <!-- Map Section -->
+              <div class="mt-6 aspect-video rounded-lg overflow-hidden bg-dark-300 border border-dark-400">
+                {branch.map_embed_url ? (
+                  <iframe
+                    src={branch.map_embed_url}
+                    class="w-full h-full"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                ) : (
+                  <div class="w-full h-full flex items-center justify-center">
+                    <div class="text-center text-gray-500">
+                      <svg class="w-10 h-10 mx-auto mb-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <p class="text-sm">Map Coming Soon</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div class="mt-6 flex gap-3">
