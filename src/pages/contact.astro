@@ -1,33 +1,11 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import Hero from '../components/Hero.astro';
-import { getBranches } from '../lib/directus.js';
+import { getBranches, getSiteSettings } from '../lib/directus.js';
 
-// Fallback branch data
-const fallbackBranches = [
-  {
-    id: '1',
-    name: 'ECJ Tires',
-    is_main_branch: true,
-    address: 'Main Street, Antipolo City, Rizal, Philippines',
-    phone: '+63 912 345 6789',
-    email: 'ecjtires@email.com',
-    operating_hours: '8:00 AM - 5:00 PM Daily',
-  },
-  {
-    id: '2',
-    name: 'ECJL Tires',
-    is_main_branch: false,
-    address: 'Second Branch Location, Antipolo City, Rizal, Philippines',
-    phone: '+63 912 345 6790',
-    email: 'ecjltires@email.com',
-    operating_hours: '8:00 AM - 5:00 PM Daily',
-  },
-];
-
-// Fetch from Directus with fallback
-const directusBranches = await getBranches();
-const branches = directusBranches.length > 0 ? directusBranches : fallbackBranches;
+// Fetch data from Directus
+const branches = await getBranches();
+const siteSettings = await getSiteSettings();
 
 // Get URL params for pre-filled inquiry
 const url = Astro.url;
@@ -195,6 +173,7 @@ const inquiryItem = url.searchParams.get('item') || '';
       <!-- Branch Cards -->
       <div class="mt-12">
         <h2 class="text-2xl font-bold text-white mb-8 text-center uppercase tracking-wide">Our <span class="gradient-text">Locations</span></h2>
+        {branches.length > 0 ? (
         <div class="grid md:grid-cols-2 gap-8">
           {branches.map((branch) => (
             <div class="card overflow-hidden group hover:border-primary/50 transition-colors">
@@ -284,6 +263,17 @@ const inquiryItem = url.searchParams.get('item') || '';
             </div>
           ))}
         </div>
+        ) : (
+        <div class="text-center py-8">
+          <div class="card p-8 max-w-md mx-auto">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <p class="text-gray-400">Branch location details coming soon. Please use the contact form above to reach us.</p>
+          </div>
+        </div>
+        )}
       </div>
     </div>
   </section>
