@@ -2,25 +2,10 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import Hero from '../../components/Hero.astro';
 import { tireBrands, rimSizes } from '../../lib/brands.js';
-import { formatPrice, getStockStatus, getImageUrl } from '../../lib/directus.js';
+import { formatPrice, getStockStatus, getImageUrl, getTires } from '../../lib/directus.js';
 
-// Sample tire data (will be replaced with Directus data)
-const sampleTires = [
-  { id: '1', name: 'Ecopia EP150', brand: 'Bridgestone', size: '185/65R15', rim_size: '15', price: 4500, status: 'in_stock', is_featured: true, image: null },
-  { id: '2', name: 'Energy XM2+', brand: 'Michelin', size: '195/65R15', rim_size: '15', price: 5800, status: 'in_stock', is_featured: true, image: null },
-  { id: '3', name: 'Assurance TripleTred', brand: 'Goodyear', size: '205/55R16', rim_size: '16', price: 6200, status: 'limited', is_featured: true, image: null },
-  { id: '4', name: 'ContiPremiumContact 5', brand: 'Continental', size: '215/60R16', rim_size: '16', price: 7500, status: 'in_stock', is_featured: false, image: null },
-  { id: '5', name: 'SP Sport LM705', brand: 'Dunlop', size: '195/55R15', rim_size: '15', price: 4200, status: 'in_stock', is_featured: false, image: null },
-  { id: '6', name: 'BluEarth ES32', brand: 'Yokohama', size: '185/60R15', rim_size: '15', price: 3800, status: 'in_stock', is_featured: false, image: null },
-  { id: '7', name: 'Proxes CF2', brand: 'Toyo', size: '205/65R16', rim_size: '16', price: 5500, status: 'limited', is_featured: false, image: null },
-  { id: '8', name: 'Advantage T/A Sport', brand: 'BFGoodrich', size: '225/45R17', rim_size: '17', price: 6800, status: 'in_stock', is_featured: false, image: null },
-  { id: '9', name: 'Cinturato P7', brand: 'Pirelli', size: '215/55R17', rim_size: '17', price: 8200, status: 'out_of_stock', is_featured: false, image: null },
-  { id: '10', name: 'Ventus Prime 3', brand: 'Hankook', size: '195/60R15', rim_size: '15', price: 3500, status: 'in_stock', is_featured: false, image: null },
-  { id: '11', name: 'Ecsta PS71', brand: 'Kumho', size: '205/50R17', rim_size: '17', price: 4800, status: 'in_stock', is_featured: false, image: null },
-  { id: '12', name: 'Atrezzo ZSR', brand: 'Sailun', size: '185/55R15', rim_size: '15', price: 2800, status: 'in_stock', is_featured: false, image: null },
-];
-
-const tires = sampleTires;
+// Fetch tires from Directus
+const allTires = await getTires();
 
 // Get URL params for filtering
 const url = Astro.url;
@@ -28,7 +13,7 @@ const selectedBrand = url.searchParams.get('brand') || '';
 const selectedRimSize = url.searchParams.get('rim_size') || '';
 
 // Filter tires
-let filteredTires = tires;
+let filteredTires = allTires;
 if (selectedBrand) {
   filteredTires = filteredTires.filter(t => t.brand === selectedBrand);
 }
@@ -48,138 +33,17 @@ if (selectedRimSize) {
 
   <section class="py-16 bg-dark-100">
     <div class="container mx-auto px-4">
-      <!-- Filters -->
-      <div class="card p-6 mb-8">
-        <form method="get" class="flex flex-wrap gap-4 items-end">
-          <div class="flex-1 min-w-[200px]">
-            <label class="form-label">Brand</label>
-            <select name="brand" class="form-input">
-              <option value="">All Brands</option>
-              {tireBrands.map((brand) => (
-                <option value={brand} selected={selectedBrand === brand}>{brand}</option>
-              ))}
-            </select>
-          </div>
-          <div class="flex-1 min-w-[200px]">
-            <label class="form-label">Rim Size</label>
-            <select name="rim_size" class="form-input">
-              <option value="">All Sizes</option>
-              {rimSizes.map((size) => (
-                <option value={size} selected={selectedRimSize === size}>{size}"</option>
-              ))}
-            </select>
-          </div>
-          <div class="flex gap-2">
-            <button type="submit" class="btn btn-primary">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Filter
-            </button>
-            {(selectedBrand || selectedRimSize) && (
-              <a href="/tires/" class="btn btn-secondary">Clear</a>
-            )}
-          </div>
-        </form>
-      </div>
-
-      <!-- Results count -->
-      <div class="mb-6">
-        <p class="text-gray-400">
-          Showing <span class="font-semibold text-white">{filteredTires.length}</span> tire{filteredTires.length !== 1 ? 's' : ''}
-          {selectedBrand && <span> from <span class="font-semibold text-primary">{selectedBrand}</span></span>}
-          {selectedRimSize && <span> in <span class="font-semibold text-primary">{selectedRimSize}" rim size</span></span>}
-        </p>
-      </div>
-
-      <!-- Tire Grid -->
-      {filteredTires.length > 0 ? (
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredTires.map((tire) => {
-            const stockStatus = getStockStatus(tire.status);
-            const imageUrl = getImageUrl(tire.image);
-            const hasImage = tire.image !== null && tire.image !== undefined;
-            return (
-              <div class="card overflow-hidden group">
-                <!-- Product Image -->
-                <div class="aspect-square bg-dark-300 flex items-center justify-center relative overflow-hidden">
-                  {hasImage ? (
-                    <img
-                      src={imageUrl}
-                      alt={`${tire.brand} ${tire.name}`}
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div class="text-center p-4">
-                      <svg class="w-16 h-16 mx-auto text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke-width="2" />
-                        <circle cx="12" cy="12" r="4" stroke-width="2" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
-                      </svg>
-                      <span class="text-xs text-gray-500">No Image</span>
-                    </div>
-                  )}
-                  {tire.is_featured && (
-                    <div class="absolute top-3 left-3 badge badge-success">
-                      Featured
-                    </div>
-                  )}
-                  <div class={`absolute top-3 right-3 badge ${
-                    tire.status === 'in_stock' ? 'badge-success' :
-                    tire.status === 'limited' ? 'badge-warning' :
-                    'badge-danger'
-                  }`}>
-                    {stockStatus.label}
-                  </div>
-                </div>
-
-                <div class="p-4">
-                  <div class="text-sm text-primary font-semibold mb-1">{tire.brand}</div>
-                  <h3 class="font-bold text-white mb-2 group-hover:text-primary transition-colors">{tire.name}</h3>
-
-                  <div class="flex items-center gap-2 text-sm text-gray-400 mb-3">
-                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                    </svg>
-                    <span>{tire.size}</span>
-                  </div>
-
-                  <div class="flex items-center justify-between">
-                    <div class="text-xl font-bold text-white">
-                      {formatPrice(tire.price)}
-                    </div>
-                  </div>
-
-                  <a
-                    href={`/contact/?inquiry=tire&item=${encodeURIComponent(tire.brand + ' ' + tire.name)}`}
-                    class="mt-4 w-full btn btn-primary text-sm block text-center"
-                  >
-                    Inquire Now
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
+      {allTires.length === 0 ? (
+        <!-- Empty state when no tires in Directus -->
         <div class="text-center py-16">
-          <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <svg class="w-20 h-20 mx-auto text-gray-600 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="1.5" />
+            <circle cx="12" cy="12" r="4" stroke-width="1.5" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
           </svg>
-          <h3 class="text-xl font-bold text-white mb-2">No tires found</h3>
-          <p class="text-gray-400 mb-4">Try adjusting your filters or browse all tires.</p>
-          <a href="/tires/" class="btn btn-primary">View All Tires</a>
-        </div>
-      )}
-
-      <!-- Contact CTA -->
-      <div class="mt-12 card p-6 border-primary/30">
-        <div class="md:flex items-center justify-between">
-          <div class="mb-4 md:mb-0">
-            <h3 class="text-lg font-bold text-white mb-1">Can't find what you're looking for?</h3>
-            <p class="text-gray-400 text-sm">Contact us and we'll help you find the perfect tire for your vehicle.</p>
-          </div>
-          <div class="flex gap-3">
+          <h3 class="text-2xl font-bold text-white mb-3">Our Tire Catalog is Being Updated</h3>
+          <p class="text-gray-400 mb-6 max-w-md mx-auto">We're currently updating our tire inventory. Contact us for our current selection and pricing.</p>
+          <div class="flex gap-4 justify-center">
             <a href="/contact/" class="btn btn-primary">Contact Us</a>
             <a href="tel:+639123456789" class="btn btn-secondary">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,7 +53,152 @@ if (selectedRimSize) {
             </a>
           </div>
         </div>
-      </div>
+      ) : (
+        <>
+          <!-- Filters -->
+          <div class="card p-6 mb-8">
+            <form method="get" class="flex flex-wrap gap-4 items-end">
+              <div class="flex-1 min-w-[200px]">
+                <label class="form-label">Brand</label>
+                <select name="brand" class="form-input">
+                  <option value="">All Brands</option>
+                  {tireBrands.map((brand) => (
+                    <option value={brand} selected={selectedBrand === brand}>{brand}</option>
+                  ))}
+                </select>
+              </div>
+              <div class="flex-1 min-w-[200px]">
+                <label class="form-label">Rim Size</label>
+                <select name="rim_size" class="form-input">
+                  <option value="">All Sizes</option>
+                  {rimSizes.map((size) => (
+                    <option value={size} selected={selectedRimSize === size}>{size}"</option>
+                  ))}
+                </select>
+              </div>
+              <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  Filter
+                </button>
+                {(selectedBrand || selectedRimSize) && (
+                  <a href="/tires/" class="btn btn-secondary">Clear</a>
+                )}
+              </div>
+            </form>
+          </div>
+
+          <!-- Results count -->
+          <div class="mb-6">
+            <p class="text-gray-400">
+              Showing <span class="font-semibold text-white">{filteredTires.length}</span> tire{filteredTires.length !== 1 ? 's' : ''}
+              {selectedBrand && <span> from <span class="font-semibold text-primary">{selectedBrand}</span></span>}
+              {selectedRimSize && <span> in <span class="font-semibold text-primary">{selectedRimSize}" rim size</span></span>}
+            </p>
+          </div>
+
+          <!-- Tire Grid -->
+          {filteredTires.length > 0 ? (
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredTires.map((tire) => {
+                const stockStatus = getStockStatus(tire.status);
+                const imageUrl = getImageUrl(tire.image);
+                const hasImage = tire.image !== null && tire.image !== undefined;
+                return (
+                  <div class="card overflow-hidden group">
+                    <!-- Product Image -->
+                    <div class="aspect-square bg-dark-300 flex items-center justify-center relative overflow-hidden">
+                      {hasImage ? (
+                        <img
+                          src={imageUrl}
+                          alt={`${tire.brand} ${tire.name}`}
+                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div class="text-center p-4">
+                          <svg class="w-16 h-16 mx-auto text-gray-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke-width="2" />
+                            <circle cx="12" cy="12" r="4" stroke-width="2" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4M12 18v4M2 12h4M18 12h4" />
+                          </svg>
+                          <span class="text-xs text-gray-500">No Image</span>
+                        </div>
+                      )}
+                      {tire.is_featured && (
+                        <div class="absolute top-3 left-3 badge badge-success">
+                          Featured
+                        </div>
+                      )}
+                      <div class={`absolute top-3 right-3 badge ${
+                        tire.status === 'in_stock' ? 'badge-success' :
+                        tire.status === 'limited' ? 'badge-warning' :
+                        'badge-danger'
+                      }`}>
+                        {stockStatus.label}
+                      </div>
+                    </div>
+
+                    <div class="p-4">
+                      <div class="text-sm text-primary font-semibold mb-1">{tire.brand}</div>
+                      <h3 class="font-bold text-white mb-2 group-hover:text-primary transition-colors">{tire.name}</h3>
+
+                      <div class="flex items-center gap-2 text-sm text-gray-400 mb-3">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                        <span>{tire.size}</span>
+                      </div>
+
+                      <div class="flex items-center justify-between">
+                        <div class="text-xl font-bold text-white">
+                          {formatPrice(tire.price)}
+                        </div>
+                      </div>
+
+                      <a
+                        href={`/contact/?inquiry=tire&item=${encodeURIComponent(tire.brand + ' ' + tire.name)}`}
+                        class="mt-4 w-full btn btn-primary text-sm block text-center"
+                      >
+                        Inquire Now
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div class="text-center py-16">
+              <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h3 class="text-xl font-bold text-white mb-2">No tires found</h3>
+              <p class="text-gray-400 mb-4">Try adjusting your filters or browse all tires.</p>
+              <a href="/tires/" class="btn btn-primary">View All Tires</a>
+            </div>
+          )}
+
+              <!-- Contact CTA -->
+          <div class="mt-12 card p-6 border-primary/30">
+            <div class="md:flex items-center justify-between">
+              <div class="mb-4 md:mb-0">
+                <h3 class="text-lg font-bold text-white mb-1">Can't find what you're looking for?</h3>
+                <p class="text-gray-400 text-sm">Contact us and we'll help you find the perfect tire for your vehicle.</p>
+              </div>
+              <div class="flex gap-3">
+                <a href="/contact/" class="btn btn-primary">Contact Us</a>
+                <a href="tel:+639123456789" class="btn btn-secondary">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  Call Now
+                </a>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   </section>
 </MainLayout>
